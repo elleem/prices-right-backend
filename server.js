@@ -1,10 +1,13 @@
 'use strict'; 
 
-require('dotenv').config(); 
-const express = require('express'); 
+require('dotenv').config();
+const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const mongoose = require('mongoose');
+
+const notFound = require('./modules/notFound');
+const Handler = require('./modules/handlers');
 
 
 
@@ -27,6 +30,10 @@ app.get('/', (request, response) => {
   response.status(200).send('PRICES RIGHT?!');
 
 });
+
+
+app.get('/savedresults', Handler.savedResults);
+app.get('*', notFound);
 
 app.use((error, request, response, next) => {
   response.status(500).send(`Error occurred in the server! ${error.message}`);
