@@ -26,12 +26,10 @@ db.once('open', function() {
 });
 
 app.get('/', (request, response) => {
-
   response.status(200).send('PRICES RIGHT?!');
-
 });
 
-
+app.get('/citysearch', Handler.getCity);
 app.get('/savedresults', Handler.savedResults);
 app.get('*', notFound);
 

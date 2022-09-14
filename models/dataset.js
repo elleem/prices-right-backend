@@ -7,17 +7,13 @@ const { Schema } = mongoose;
 const resultsSchema = new Schema({
   city: String,
   col_idx: Number,
-  rent_idx: Number,
-  col_plus_rent_idx: Number,
+  rent_index: Number,
+  col_plus_idx: Number,
   groceries_idx: Number,
   restaurant_idx: Number,
   local_purchasing_pwr_idx: Number,
-  gas_price: String,
-  time_stamp: Date,
-  user_email: String,
-  search_query: String
-}); 
+}, { collection : 'cost-of-living-dataset' });
 
-const Results = mongoose.model('Results', resultsSchema);
+const Dataset = mongoose.model('cost-of-living-dataset', resultsSchema);
 
-module.exports = Results;
+module.exports = Dataset;
