@@ -20,7 +20,7 @@ Handler.getCity = (req, res) => {
     gas_price: '',
     search_city: ''
   };
-
+  console.log(req.city);
   const config = {
     url: `https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATION_KEY}&q=${req.query.city}&format=json`,
     headers: { 'referer': 'http://localhost:3001/' }
@@ -94,6 +94,15 @@ Handler.savedResults = async (req, res, next) => {
   }
 };
 
+Handler.handleGetUser = (req, res) => {
+  console.log('Getting the user');
+  res.send(req.user);
+};
 
+Handler.saveCity = (req,res) => {
+  console.log(req.body)
+  console.log(req.user)
+  res.send(req.body);
+}
 
 module.exports = Handler;
