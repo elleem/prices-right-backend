@@ -41,7 +41,17 @@ Handler.getCity = (req, res) => {
           console.log('Dataset: ', Dataset);
           console.log('resultObj Object: ', {city: resultObj.search_city});
           Dataset.find({ city: { $regex: `(?i)${resultObj.search_city}(?-i)` } })
-            .then(response => console.log('Last Response: ', response));
+            .then(response => {
+              resultObj.city = response[0].city;
+              resultObj.col_idx = response[0].col_idx;
+              resultObj.rent_idx = response[0].rent_idx;
+              resultObj.col_plus_rent_idx = response[0].col_plus_rent_idx;
+              resultObj.groceries_idx = response[0].groceries_idx;
+              resultObj.restaurant_idx = response[0].restaurant_idx;
+              resultObj.local_purchasing_pwr_idx = response[0].local_purchasing_pwr_idx;
+              res.send(resultObj);
+            });
+          
         });
     })
     .catch(error => {
