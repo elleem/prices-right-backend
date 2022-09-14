@@ -7,21 +7,34 @@ require('dotenv').config();
 
 const Handler = {};
 
-Handler.getCity = (req) => {
+Handler.getCity = (req, res) => {
+  const resultObj = {
+    city: '',
+    col_idx:  '',
+    rent_idx: '',
+    col_plus_rent_idx: '',
+    groceries_idx: '',
+    restaurant_idx:  '',
+    local_purchasing_pwr_idx:  '',
+    gas_price: '',
+  }
   const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATION_KEY}&q=${req.query.city}&format=json`;
   axios.get(url)
     .then(response => {
-      console.log('Location Response: ', response.data);
+      console.log('Location Response: ', response.data[0]);
       const locationObj = {
-        lat: response.data.lat,
-        lon: response.data.lon,
-        country: response.data.display_name.split(', ')[response.data.display_name.length - 1]
+        lat: response.data[0].lat,
+        lon: response.data[0].lon,
+        country: response.data[0].display_name.split(', ')[response.data[0].display_name.split(', ').length - 1]
       };
-      getGasPrices(locationObj);
+      getGasPrices(locationObj)
+        .then(result => {
+          console.log('Gas Response:', result.data);
+          resultObj['gas_price'] = result.data[0].Price
+          res.send(resultObj);
+        })
     })
-    .then(response => {
-      console.log('Gas Response:', response.data);
-    }).catch(error => {
+    .catch(error => {
       console.log(error);
     });
 };
@@ -33,7 +46,8 @@ const getGasPrices = (locationObj) => {
     isUSA = true;
   }
   const url = `https://www.gasbuddy.com/gaspricemap/county?lat=${locationObj.lat}&lng=${locationObj.lon}&usa=${isUSA}`;
-  const response = axios.get(url);
+  console.log(url)
+  return axios.post(url);
 };
 
 Handler.savedResults = async (req, res, next) => {
