@@ -105,7 +105,7 @@ Handler.saveCity = async (req,res, next) => {
   console.log(req.user);
   
   try{
-    const savedCity = await Results.create({...req.body, user_email: request.user.email, time_stamp: Date.now() });
+    const savedCity = await Results.create({...req.body, user_email: req.user.email, time_stamp: Date.now() });
     res.status(201).send(savedCity);
   } catch(e) {
     console.log('Save City failed!');
