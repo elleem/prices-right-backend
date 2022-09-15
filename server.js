@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 require('dotenv').config();
 const express = require('express');
@@ -8,13 +8,14 @@ const mongoose = require('mongoose');
 
 const notFound = require('./modules/notFound');
 const Handler = require('./modules/handlers');
+const verifyUser = require('./modules/auth.js');
 
 
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.use(verifyUser);
 const PORT = process.env.PORT || 3002;
 
 mongoose.connect(process.env.MONGO_CONNECTION);
@@ -32,6 +33,9 @@ app.get('/', (request, response) => {
 app.get('/citysearch', Handler.getCity);
 app.get('/savedresults', Handler.savedResults);
 app.get('*', notFound);
+app.get('/user', Handler.handleGetUser);
+app.post('/savecity', Handler.saveCity);
+app.delete('/savedresults/:_id', Handler.deleteCity);
 
 app.use((error, request, response, next) => {
   response.status(500).send(`Error occurred in the server! ${error.message}`);

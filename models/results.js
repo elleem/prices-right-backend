@@ -15,8 +15,9 @@ const resultsSchema = new Schema({
   gas_price: String,
   time_stamp: Date,
   user_email: String,
-  search_query: String
-}); 
+  results_city: String,
+}, { collection : 'results' });
+
 
 const Results = mongoose.model('Results', resultsSchema);
 

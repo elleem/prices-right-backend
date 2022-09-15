@@ -1,6 +1,6 @@
 'use strict';
 
-const { response } = require('express');
+const { response, request } = require('express');
 const Results = require('../models/results');
 const Dataset = require('../models/dataset');
 const axios = require('axios');
@@ -18,9 +18,9 @@ Handler.getCity = (req, res) => {
     restaurant_idx: '',
     local_purchasing_pwr_idx: '',
     gas_price: '',
-    search_city: ''
+    results_city: ''
   };
-
+  console.log(req.city);
   const config = {
     url: `https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATION_KEY}&q=${req.query.city}&format=json`,
     headers: { 'referer': 'http://localhost:3001/' }
@@ -33,7 +33,7 @@ Handler.getCity = (req, res) => {
         lon: response.data[0].lon,
         country: response.data[0].display_name.split(', ')[response.data[0].display_name.split(', ').length - 1]
       };
-      resultObj['search_city'] = response.data[0].display_name.split(',')[0];
+      resultObj['results_city'] = response.data[0].display_name.split(',')[0];
       getGasPrices(locationObj)
         .then(result => {
           console.log('Gas Price Promise:', result.data[0]);
@@ -47,12 +47,13 @@ Handler.getCity = (req, res) => {
                 if (response.length > 0) {
                   resultObj.city = response[0].city;
                   resultObj.col_idx = response[0].col_idx;
-                  resultObj.rent_idx = response[0].rent_idx;
-                  resultObj.col_plus_rent_idx = response[0].col_plus_rent_idx;
+                  resultObj.rent_idx = response[0].rent_index;
+                  resultObj.col_plus_rent_idx = response[0].col_plus_idx;                  ;
                   resultObj.groceries_idx = response[0].groceries_idx;
                   resultObj.restaurant_idx = response[0].restaurant_idx;
                   resultObj.local_purchasing_pwr_idx = response[0].local_purchasing_pwr_idx;
                   res.send(resultObj);
+                  console.log('resultObj: ', resultObj);
                 }
                 else {
                   res.send('City data not found.');
@@ -94,6 +95,32 @@ Handler.savedResults = async (req, res, next) => {
   }
 };
 
+Handler.handleGetUser = (req, res) => {
+  console.log('Getting the user');
+  res.send(req.user);
+};
 
+Handler.saveCity = async (req,res, next) => {
+  console.log('req.body:', req.body);
+  console.log(req.user);
+  
+  try{
+    const savedCity = await Results.create({...req.body, user_email: req.user.email, time_stamp: Date.now() });
+    res.status(201).send(savedCity);
+  } catch(e) {
+    console.log('Save City failed!');
+    next(e);
+  }
+}
 
+Handler.deleteCity = async (req, res, next) => {
+  console.log('deleteBook: ', request.params);
+  try{
+    await Results.findByIdAndDelete({_id: req.params._id});
+    res.status(200).send('City deleted!');
+  } catch(e) {
+    console.log(e);
+    next(e);
+  }
+}
 module.exports = Handler;
