@@ -33,7 +33,7 @@ Handler.getCity = (req, res) => {
         lon: response.data[0].lon,
         country: response.data[0].display_name.split(', ')[response.data[0].display_name.split(', ').length - 1]
       };
-      resultObj['search_city'] = response.data[0].display_name.split(',')[0];
+      resultObj['results_city'] = response.data[0].display_name.split(',')[0];
       getGasPrices(locationObj)
         .then(result => {
           console.log('Gas Price Promise:', result.data[0]);
@@ -113,4 +113,14 @@ Handler.saveCity = async (req,res, next) => {
   }
 }
 
+Handler.deleteCity = async (req, res, next) => {
+  console.log('deleteBook: ', request.params);
+  try{
+    await Results.findByIdAndDelete({_id: req.params._id});
+    res.status(200).send('City deleted!');
+  } catch(e) {
+    console.log(e);
+    next(e);
+  }
+}
 module.exports = Handler;
