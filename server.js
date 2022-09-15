@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 require('dotenv').config();
 const express = require('express');
@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 const notFound = require('./modules/notFound');
 const Handler = require('./modules/handlers');
-const verifyUser = require('./modules/auth.js')
+const verifyUser = require('./modules/auth.js');
 
 
 
@@ -33,8 +33,8 @@ app.get('/', (request, response) => {
 app.get('/citysearch', Handler.getCity);
 app.get('/savedresults', Handler.savedResults);
 app.get('*', notFound);
-app.get('/user', Handler.handleGetUser); // lab 15
-app.post('/savecity', Handler.saveCity)
+app.get('/user', Handler.handleGetUser);
+app.post('/savecity', Handler.saveCity);
 
 app.use((error, request, response, next) => {
   response.status(500).send(`Error occurred in the server! ${error.message}`);

@@ -1,6 +1,6 @@
 'use strict';
 
-const { response } = require('express');
+const { response, request } = require('express');
 const Results = require('../models/results');
 const Dataset = require('../models/dataset');
 const axios = require('axios');
@@ -18,7 +18,7 @@ Handler.getCity = (req, res) => {
     restaurant_idx: '',
     local_purchasing_pwr_idx: '',
     gas_price: '',
-    search_city: ''
+    results_city: ''
   };
   console.log(req.city);
   const config = {
@@ -47,12 +47,13 @@ Handler.getCity = (req, res) => {
                 if (response.length > 0) {
                   resultObj.city = response[0].city;
                   resultObj.col_idx = response[0].col_idx;
-                  resultObj.rent_idx = response[0].rent_idx;
-                  resultObj.col_plus_rent_idx = response[0].col_plus_rent_idx;
+                  resultObj.rent_idx = response[0].rent_index;
+                  resultObj.col_plus_rent_idx = response[0].col_plus_idx;                  ;
                   resultObj.groceries_idx = response[0].groceries_idx;
                   resultObj.restaurant_idx = response[0].restaurant_idx;
                   resultObj.local_purchasing_pwr_idx = response[0].local_purchasing_pwr_idx;
                   res.send(resultObj);
+                  console.log('resultObj: ', resultObj);
                 }
                 else {
                   res.send('City data not found.');
@@ -99,10 +100,17 @@ Handler.handleGetUser = (req, res) => {
   res.send(req.user);
 };
 
-Handler.saveCity = (req,res) => {
-  console.log(req.body)
-  console.log(req.user)
-  res.send(req.body);
+Handler.saveCity = async (req,res, next) => {
+  console.log('req.body:', req.body);
+  console.log(req.user);
+  
+  try{
+    const savedCity = await Results.create({...req.body, user_email: 'monidavies@gmail.com', time_stamp: Date.now() });
+    res.status(201).send(savedCity);
+  } catch(e) {
+    console.log('Save City failed!');
+    next(e);
+  }
 }
 
 module.exports = Handler;
