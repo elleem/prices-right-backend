@@ -35,6 +35,7 @@ app.get('/savedresults', Handler.savedResults);
 app.get('*', notFound);
 app.get('/user', Handler.handleGetUser);
 app.post('/savecity', Handler.saveCity);
+app.delete('/savedresults/:_id', Handler.deleteCity);
 
 app.use((error, request, response, next) => {
   response.status(500).send(`Error occurred in the server! ${error.message}`);
