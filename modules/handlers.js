@@ -114,7 +114,7 @@ Handler.saveCity = async (req,res, next) => {
 }
 
 Handler.deleteCity = async (req, res, next) => {
-  console.log('deleteBook: ', request.params);
+  console.log('deleteBook: ', req.params);
   try{
     await Results.findByIdAndDelete({_id: req.params._id});
     res.status(200).send('City deleted!');
