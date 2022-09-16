@@ -39,10 +39,10 @@ Handler.getCity = (req, res) => {
           console.log('Gas Price Promise:', result.data[0]);
           result.data[0] ? resultObj['gas_price'] = result.data[0].Price : resultObj['gas_price'] = 'Gas prices not available.';
           console.log('Dataset: ', Dataset);
-          console.log('resultObj Object: ', { city: resultObj.search_city });
+          console.log('resultObj Object: ', { city: resultObj.results_city });
 
           try {
-            Dataset.find({ city: { $regex: `(?i)${resultObj.search_city}(?-i)` } })
+            Dataset.find({ city: { $regex: `(?i)${resultObj.results_city}(?-i)` } })
               .then(response => {
                 if (response.length > 0) {
                   resultObj.city = response[0].city;
