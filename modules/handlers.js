@@ -37,7 +37,7 @@ Handler.getCity = (req, res) => {
       getGasPrices(locationObj)
         .then(result => {
           console.log('Gas Price Promise:', result.data[0]);
-          result.data[0] ? resultObj['gas_price'] = result.data[0].Price : resultObj['gas_price'] = 'Gas prices not available.';
+          result.data[0] ? resultObj['gas_price'] = result.data[0].Price : resultObj['gas_price'] = 'N/A';
           console.log('Dataset: ', Dataset);
           console.log('resultObj Object: ', { city: resultObj.results_city });
 
