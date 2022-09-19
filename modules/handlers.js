@@ -87,7 +87,7 @@ const getGasPrices = (locationObj) => {
 
 Handler.savedResults = async (req, res, next) => {
   try {
-    const results = await Results.find({});
+    const results = await Results.find({user_email: req.user.email});
     res.status(200).send(results);
   } catch (error) {
     console.error(error);
